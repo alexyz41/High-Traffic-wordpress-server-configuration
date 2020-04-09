@@ -29,14 +29,14 @@ sudo wget -q https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress
 sudo wget -q https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/kloudboy/php_fastcgi.conf
 sudo wget -q https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/kloudboy/wordpress.conf
 sudo wget -q https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/kloudboy/security.conf
-tput setaf 2; echo "Setting up Cloudflare FULL SSL"
+tput setaf 2; echo "Installing and configuring SSL with Letsencrypt"
 sleep 2;
 tput sgr0
 sudo mkdir /etc/nginx/ssl
-cd /etc/nginx/ssl/
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
-sudo openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
-cd /etc/nginx/
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt update
+sudo apt install python-certbot-nginx
+sudo certbot --nginx -d "$DOMAIN" -d www."$DOMAIN" --redirect
 sudo mv nginx.conf nginx.conf.backup
 sudo wget -qO nginx.conf https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/nginx.conf
 sudo mkdir -p /var/www/"$DOMAIN"/public
