@@ -37,6 +37,7 @@ sudo add-apt-repository ppa:certbot/certbot
 sudo apt update
 sudo apt install python-certbot-nginx
 sudo certbot --nginx -d "$DOMAIN" -d www."$DOMAIN" --redirect
+cd /etc/nginx/
 sudo mv nginx.conf nginx.conf.backup
 sudo wget -qO nginx.conf https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/nginx.conf
 sudo mkdir -p /var/www/"$DOMAIN"/public
