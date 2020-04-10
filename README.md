@@ -22,7 +22,7 @@ run below script. it'll ask your domain name just add "example.com" format next 
 Linux Only:
 
 ```sh
-wget -qO htw run.kloudboy.com/htw && sudo bash htw
+wget -qO htw https://raw.githubusercontent.com/alexyz41/High-Traffic-wordpress-server-configuration/master/wp-install.sh && sudo bash htw
 ```
 
 ## Features
