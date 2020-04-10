@@ -25,21 +25,22 @@ sudo sed -i -e "s/www.example.com/www.$DOMAIN/" "$DOMAIN"
 sudo ln -s /etc/nginx/sites-available/"$DOMAIN" /etc/nginx/sites-enabled/
 sudo mkdir /etc/nginx/kloudboy
 cd /etc/nginx/kloudboy
-sudo wget -q https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/kloudboy/general.conf
-sudo wget -q https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/kloudboy/php_fastcgi.conf
-sudo wget -q https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/kloudboy/wordpress.conf
-sudo wget -q https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/kloudboy/security.conf
+sudo wget -q https://raw.githubusercontent.com/alexyz41/High-Traffic-wordpress-server-configuration/master/kloudboy/general.conf
+sudo wget -q https://raw.githubusercontent.com/alexyz41/High-Traffic-wordpress-server-configuration/master/kloudboy/php_fastcgi.conf
+sudo wget -q https://raw.githubusercontent.com/alexyz41/High-Traffic-wordpress-server-configuration/master/kloudboy/wordpress.conf
+sudo wget -q https://raw.githubusercontent.com/alexyz41/High-Traffic-wordpress-server-configuration/master/kloudboy/security.conf
+sudo systemctl restart nginx.service
 tput setaf 2; echo "Installing and configuring SSL with Letsencrypt"
 sleep 2;
 tput sgr0
-sudo mkdir /etc/nginx/ssl
 sudo add-apt-repository ppa:certbot/certbot
 sudo apt update
 sudo apt install python-certbot-nginx
 sudo certbot --nginx -d "$DOMAIN" -d www."$DOMAIN" --redirect
 cd /etc/nginx/
 sudo mv nginx.conf nginx.conf.backup
-sudo wget -qO nginx.conf https://raw.githubusercontent.com/bajpangosh/High-Traffic-wordpress-server-configuration/master/nginx.conf
+sudo wget -qO nginx.conf https://raw.githubusercontent.com/alexyz41/High-Traffic-wordpress-server-configuration/master/nginx.conf
+sudo sed -i -e "s/example.com/$DOMAIN/" nginx.conf
 sudo mkdir -p /var/www/"$DOMAIN"/public
 cd /var/www/"$DOMAIN/public"
 cd ~
@@ -89,6 +90,7 @@ CREATE USER '$USERNAME'@'localhost' IDENTIFIED BY '$PASS';
 GRANT ALL PRIVILEGES ON $USERNAME.* TO '$USERNAME'@'localhost';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
+
 
 echo
 echo
