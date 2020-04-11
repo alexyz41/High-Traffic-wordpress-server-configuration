@@ -85,21 +85,29 @@ GRANT ALL PRIVILEGES ON $USERNAME.* TO '$USERNAME'@'localhost';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
 
+tput setaf 2; echo "Downloading wp-cli..."
+sleep 2;
+tput sgr0
+cd ~
+sudo curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+sudo chmod +x wp-cli.phar
+sudo mv wp-cli.phar /usr/local/bin/wp
+
 cd /var/www/"$DOMAIN/public"
 tput setaf 2; echo "Downloading Latest Wordpress...."
 sleep 2;
 tput sgr0
-wp core download --locale=es_ES
-wp config create --dbname="$USERNAME" --dbuser="$USERNAME" --dbpass="$PASS"
+sudo wp core download --locale=es_ES
+sudo wp config create --dbname="$USERNAME" --dbuser="$USERNAME" --dbpass="$PASS"
 tput setaf 2; echo "Site title?"
 read TITLE
 tput setaf 2; echo "Wordpress username?"
 read WPUSERNAME
 tput setaf 2; echo "Wordpress email?"
 read EMAIL
-wp core install --url="$DOMAIN" --title="$TITLE" --admin_user="$WPUSERNAME" --admin_password="$PASS" --admin_email="$EMAIL"
-#wp plugin install wp-super-cache --activate
-#wp theme install wp-super-cache --activate
+sudo wp core install --url="$DOMAIN" --title="$TITLE" --admin_user="$WPUSERNAME" --admin_password="$PASS" --admin_email="$EMAIL"
+#sudo wp plugin install wp-super-cache --activate
+#sudo wp theme install wp-super-cache --activate
 
 echo
 echo
