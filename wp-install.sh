@@ -37,7 +37,7 @@ sudo add-apt-repository ppa:certbot/certbot
 sudo apt update
 sudo apt install python-certbot-nginx
 sudo certbot --nginx -d "$DOMAIN" -d www."$DOMAIN" --redirect
-sudo cd /etc/nginx/sites-available
+cd /etc/nginx/sites-available
 sudo sed -i "/ssl_dhparam \/etc\/letsencrypt\/ssl-dhparams.pem; # managed by Certbot/a  ssl_trusted_certificate  \/etc\/letsencrypt\/live\/$DOMAIN\/chain.pem;" "$DOMAIN"
 cd /etc/nginx/
 sudo mv nginx.conf nginx.conf.backup
@@ -97,15 +97,15 @@ cd /var/www/"$DOMAIN/public"
 tput setaf 2; echo "Downloading Latest Wordpress...."
 sleep 2;
 tput sgr0
-sudo wp core download --locale=es_ES
-sudo wp config create --dbname="$USERNAME" --dbuser="$USERNAME" --dbpass="$PASS"
+sudo wp core download --locale=es_ES --allow-root
+sudo wp config create --dbname="$USERNAME" --dbuser="$USERNAME" --dbpass="$PASS" --allow-root
 tput setaf 2; echo "Site title?"
 read TITLE
 tput setaf 2; echo "Wordpress username?"
 read WPUSERNAME
 tput setaf 2; echo "Wordpress email?"
 read EMAIL
-sudo wp core install --url="$DOMAIN" --title="$TITLE" --admin_user="$WPUSERNAME" --admin_password="$PASS" --admin_email="$EMAIL"
+sudo wp core install --url="$DOMAIN" --title="$TITLE" --admin_user="$WPUSERNAME" --admin_password="$PASS" --admin_email="$EMAIL" --allow-root
 #sudo wp plugin install wp-super-cache --activate
 #sudo wp theme install wp-super-cache --activate
 
