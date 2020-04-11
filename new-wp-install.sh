@@ -21,18 +21,10 @@ sudo mkdir -p /var/www/"$DOMAIN"/public
 cd /var/www/"$DOMAIN/public"
 sudo systemctl restart nginx.service
 sudo certbot --nginx -d "$DOMAIN" -d www."$DOMAIN" --redirect
-cd ~
-
-tput setaf 2; echo "Downloading Latest Wordpress...."
-sleep 2;
-tput sgr0
-sudo wget -q wordpress.org/latest.zip
-sudo unzip latest.zip
-sudo mv wordpress/* /var/www/"$DOMAIN"/public/
-sudo rm -rf wordpress latest.zip
-cd ~
-sudo chown www-data:www-data -R /var/www/"$DOMAIN"/public
+cd /etc/nginx/sites-available
+sudo sed -i "/ssl_dhparam \/etc\/letsencrypt\/ssl-dhparams.pem; # managed by Certbot/a  ssl_trusted_certificate  \/etc\/letsencrypt\/live\/$DOMAIN\/chain.pem;" "$DOMAIN"
 sudo systemctl restart nginx.service
+cd ~
 
 PASS=`pwgen -s 14 1`
 
@@ -42,6 +34,23 @@ CREATE USER '$USERNAME'@'localhost' IDENTIFIED BY '$PASS';
 GRANT ALL PRIVILEGES ON $USERNAME.* TO '$USERNAME'@'localhost';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
+
+cd /var/www/"$DOMAIN/public"
+tput setaf 2; echo "Downloading Latest Wordpress...."
+sleep 2;
+tput sgr0
+sudo wp core download --locale=es_ES --allow-root
+sudo wp config create --dbname="$USERNAME" --dbuser="$USERNAME" --dbpass="$PASS" --allow-root
+tput setaf 2; echo "Site title?"
+read TITLE
+tput setaf 2; echo "Wordpress username?"
+read WPUSERNAME
+tput setaf 2; echo "Wordpress email?"
+read EMAIL
+sudo wp core install --url="$DOMAIN" --title="$TITLE" --admin_user="$WPUSERNAME" --admin_password="$PASS" --admin_email="$EMAIL" --allow-root
+
+sudo chown www-data:www-data -R /var/www/"$DOMAIN"/public
+sudo systemctl restart nginx.service
 
 echo
 echo
