@@ -115,6 +115,8 @@ tput setaf 2; echo "Here is your Credentials"
 echo "--------------------------------"
 echo "Website:    https://www.$DOMAIN"
 echo "Dashboard:  https://www.$DOMAIN/wp-admin"
+echo "WP user:  $WPUSERNAME"
+echo "WP PASS:  $PASS"
 echo "--------------------------------"
 tput sgr0
 echo
