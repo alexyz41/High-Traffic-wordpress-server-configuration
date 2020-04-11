@@ -109,6 +109,9 @@ sudo wp core install --url="$DOMAIN" --title="$TITLE" --admin_user="$WPUSERNAME"
 #sudo wp plugin install wp-super-cache --activate
 #sudo wp theme install wp-super-cache --activate
 
+sudo chown www-data:www-data -R /var/www/"$DOMAIN"/public
+sudo systemctl restart nginx.service
+
 echo
 echo
 tput setaf 2; echo "Here is your Credentials"
