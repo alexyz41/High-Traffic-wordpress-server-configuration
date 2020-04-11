@@ -37,6 +37,8 @@ sudo add-apt-repository ppa:certbot/certbot
 sudo apt update
 sudo apt install python-certbot-nginx
 sudo certbot --nginx -d "$DOMAIN" -d www."$DOMAIN" --redirect
+sudo cd /etc/nginx/sites-available
+sudo sed -i "/ssl_dhparam \/etc\/letsencrypt\/ssl-dhparams.pem; # managed by Certbot/a  ssl_trusted_certificate  \/etc\/letsencrypt\/live\/$DOMAIN\/chain.pem;" "$DOMAIN"
 cd /etc/nginx/
 sudo mv nginx.conf nginx.conf.backup
 sudo wget -qO nginx.conf https://raw.githubusercontent.com/alexyz41/High-Traffic-wordpress-server-configuration/master/nginx.conf
@@ -44,14 +46,6 @@ sudo sed -i -e "s/example.com/$DOMAIN/" nginx.conf
 sudo mkdir -p /var/www/"$DOMAIN"/public
 cd /var/www/"$DOMAIN/public"
 cd ~
-
-tput setaf 2; echo "Downloading Latest Wordpress...."
-sleep 2;
-tput sgr0
-sudo wget -q wordpress.org/latest.zip
-sudo unzip latest.zip
-sudo mv wordpress/* /var/www/"$DOMAIN"/public/
-sudo rm -rf wordpress latest.zip
 
 tput setaf 2; echo "Nginx server installation completed.."
 sleep 2;
@@ -91,6 +85,21 @@ GRANT ALL PRIVILEGES ON $USERNAME.* TO '$USERNAME'@'localhost';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
 
+cd /var/www/"$DOMAIN/public"
+tput setaf 2; echo "Downloading Latest Wordpress...."
+sleep 2;
+tput sgr0
+wp core download --locale=es_ES
+wp config create --dbname="$USERNAME" --dbuser="$USERNAME" --dbpass="$PASS"
+tput setaf 2; echo "Site title?"
+read TITLE
+tput setaf 2; echo "Wordpress username?"
+read WPUSERNAME
+tput setaf 2; echo "Wordpress email?"
+read EMAIL
+wp core install --url="$DOMAIN" --title="$TITLE" --admin_user="$WPUSERNAME" --admin_password="$PASS" --admin_email="$EMAIL"
+#wp plugin install wp-super-cache --activate
+#wp theme install wp-super-cache --activate
 
 echo
 echo
@@ -98,17 +107,10 @@ tput setaf 2; echo "Here is your Credentials"
 echo "--------------------------------"
 echo "Website:    https://www.$DOMAIN"
 echo "Dashboard:  https://www.$DOMAIN/wp-admin"
-echo
-tput setaf 4; echo "Database Name:   $USERNAME"
-tput setaf 4; echo "Database Username:   $USERNAME"
-tput setaf 4; echo "Database Password:   $PASS"
 echo "--------------------------------"
 tput sgr0
 echo
 echo
 tput setaf 3;  echo "Installation & configuration succesfully finished."
 echo
-echo "Twitter @bajpangosh"
-echo "E-mail: support@kloudboy.com"
-echo "Bye! Your boy KLOUDBOY!"
 tput sgr0
